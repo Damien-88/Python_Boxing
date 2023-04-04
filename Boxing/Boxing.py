@@ -54,33 +54,33 @@ class Boxer:
 
         if self.weight > 200:
             self.weight_class = " Heavyweight "
-        elif self.weight <= 200:
+        elif self.weight > 175:
             self.weight_class = " Cruiserweight "
-        elif self.weight <= 175:
+        elif self.weight > 168:
             self.weight_class = " Light Heaveyweight "
-        elif self.weight <= 168:
+        elif self.weight > 160:
             self.weight_class = " Super Middleweight "
-        elif self.weight <= 160:
+        elif self.weight > 154:
             self.weight_class = " Middleweight "
-        elif self.weight <= 154:
+        elif self.weight > 147:
             self.weight_class = " Super Welterweight "
-        elif self.weight <= 147:
+        elif self.weight > 140:
             self.weight_class = " Welterweight "
-        elif self.weight <= 140:
+        elif self.weight > 135:
             self.weight_class = " Super Lightweight "
-        elif self.weight <= 135:
+        elif self.weight > 130:
             self.weight_class = " Lightweight "
-        elif self.weight <= 130:
+        elif self.weight > 126:
             self.weight_class = " Super Featerweight "
-        elif self.weight <= 126:
+        elif self.weight > 122:
             self.weight_class = " Featerweight "
-        elif self.weight <= 122:
+        elif self.weight > 118:
             self.weight_class = " Super Bantamweight "
-        elif self.weight <= 118:
+        elif self.weight > 115:
             self.weight_class = " Bantamweight "
-        elif self.weight <= 115:
+        elif self.weight > 112:
             self.weight_class = " Super Flyweight "
-        elif self.weight <= 112 and self.weight < 105:
+        elif self.weight > 105:
             self.weight_class = " Flyweight "
         else:
             self.weight_class = " Too Light "
@@ -97,8 +97,7 @@ class Boxer:
         else:
             self.side = "right"
 
-
-    def punch(self, other_boxer, location, hand):
+    def punch(self, location):
 
         self.technique = "punch"
         self.area = location
@@ -108,24 +107,24 @@ class Boxer:
         else:
             self.side = "left"
 
-    def upper_cut(self, other_boxer, hand):
+    def upper_cut(self, hand):
 
         self.technique = "upper_cut"
         self.area = "high"
         self.side = hand
 
-    def hook(self, other_boxer, location, hand):
+    def hook(self, location, hand):
 
         self.technique = "hook"
         self.area = location
         self.side = hand
 
-    def block(self, other_boxer, location):
+    def block(self, location):
         self.technique = "block"
         self.area = location
         self.side = "null"
 
-    def dodge(self, other_boxer, direction):
+    def dodge(self, direction):
         self.technique = "dodge"
         self.area = "null"
         self.side = direction
@@ -463,43 +462,86 @@ class Boxer:
 
             return "Miss"
 
-    def hold(self, other_boxer, ref):
-        pass
+    def rest(self, rounds):
+        if rounds.round == 2:
+            if self.hp < 0.75 * (100 + (self.level * 10 + self.wins * 5 - self.losses * 2)):
+                self.hp = 0.75 * (100 + (self.level * 10 + self.wins * 5 - self.losses * 2))
+            else:
+                self.hp = 100 + (self.level * 10 + self.wins * 5 - self.losses * 2)
+        elif rounds.round >= 3:
+            if self.hp < 0.5 * (100 + (self.level * 10 + self.wins * 5 - self.losses * 2)):
+                self.hp = 0.5 * (100 + (self.level * 10 + self.wins * 5 - self.losses * 2))
+            elif self.hp < 0.75 * (100 + (self.level * 10 + self.wins * 5 - self.losses * 2)):
+                self.hp = 0.75 * (100 + (self.level * 10 + self.wins * 5 - self.losses * 2))
 
-    def rest(self, ring):
-        pass
+    def dazed(self):
+        return "Dazed"
 
-    def dazed(self, other_boxer, ref):
-        pass
+    def down(self):
+        count = 10
+        if self.hp > 0.2 * (100 + (self.level * 10 + self.wins * 5 - self.losses * 2)):
+            count = 7
+        elif self.hp > 0.1 * (100 + (self.level * 10 + self.wins * 5 - self.losses * 2)):
+            count = 5
+        elif self.hp > 10:
+            count = 2
+        else:
+            count = 0
+        self.hp -= 10
+        return count
 
-    def tko(self, other_boxer, ref):
-        pass
+    def tko(self):
+        self.concious = False
+        return self.name + " is KO'd"
 
-    def win(self, other_boxer, ref):
-        pass
+    def match_end(self, other_fighter):
+        if self.concious and other_fighter.concious:
+            for hit in self.hits:
+                self.score += hit
+            for block in self.blocks:
+                self.score += block
+            for h in other_fighter.hits:
+                other_fighter.score += h
+            for b in other_fighter.blocks:
+                other_fighter.score += b
+            if self.score > other_fighter.score:
+                self.wins += 1
+                self.level += 1
+                other_fighter.losses += 1
+                return self.name + " WINS!"
+            elif other_fighter.score > self.score:
+                other_fighter.wins += 1
+                other_fighter.level += 1
+                self.losses += 1
+                return other_fighter.name + "WINS!"
+            else:
+                return "Draw"
 
-
-class Referee:
+class Rounds:
 
     def __init__(self):
-        pass
+        self.round = 1
 
-    def begin_round(self):
-        pass
+    def __repr__(self):
+        return "ROUND: " + str(self.round)
 
-    def break_up(self, boxer_one, boxer_two):
-        pass
+    def round_change(self):
+        self.round += 1
+        return self.timer(180)
+            
+    def cool_down(self):
+        return self.timer(30)
 
-    def count(self):
-        pass
+    def timer(start, boxer_1, boxer_2):
+        while start:
+            mins, secs = divmod(start, 60)
+            timer = "{:02d}:{:02d}".format(mins, secs)
+            print(timer, end = "\r")
+            time.sleep(1)
+            start -= 1
+            if boxer_1.concious == False or boxer_2.concious == False:
+                break
 
-    def call_match(self):
-        pass
+boxer_1 = Boxer("Bob", 177, "6' 1\"", 28)
 
-    def match_time(self):
-        pass
-
-class Ring:
-
-    def __init__(self):
-        pass
+boxer_2 = Boxer("Ted", 182, "5' 10\"", 36, False)
