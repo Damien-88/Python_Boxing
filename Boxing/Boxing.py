@@ -1,4 +1,4 @@
-from datetime import time
+import time
 
 class Boxer:
 
@@ -40,7 +40,7 @@ class Boxer:
         return """
         Name: {}
         Class: {}
-        Weight: {}
+        Weight: {} lbs.
         Height: {}
         Age: {}
         Wins: {}
@@ -53,39 +53,40 @@ class Boxer:
     def weight_categories(self):
 
         if self.weight > 200:
-            self.weight_class = " Heavyweight "
+            self.weight_class = "Heavyweight"
         elif self.weight > 175:
-            self.weight_class = " Cruiserweight "
+            self.weight_class = "Cruiserweight"
         elif self.weight > 168:
-            self.weight_class = " Light Heaveyweight "
+            self.weight_class = "Light Heaveyweight"
         elif self.weight > 160:
-            self.weight_class = " Super Middleweight "
+            self.weight_class = "Super Middleweight"
         elif self.weight > 154:
-            self.weight_class = " Middleweight "
+            self.weight_class = "Middleweight"
         elif self.weight > 147:
-            self.weight_class = " Super Welterweight "
+            self.weight_class = "Super Welterweight"
         elif self.weight > 140:
-            self.weight_class = " Welterweight "
+            self.weight_class = "Welterweight"
         elif self.weight > 135:
-            self.weight_class = " Super Lightweight "
+            self.weight_class = "Super Lightweight"
         elif self.weight > 130:
-            self.weight_class = " Lightweight "
+            self.weight_class = "Lightweight"
         elif self.weight > 126:
-            self.weight_class = " Super Featerweight "
+            self.weight_class = "Super Featerweight"
         elif self.weight > 122:
-            self.weight_class = " Featerweight "
+            self.weight_class = "Featerweight"
         elif self.weight > 118:
-            self.weight_class = " Super Bantamweight "
+            self.weight_class = "Super Bantamweight"
         elif self.weight > 115:
-            self.weight_class = " Bantamweight "
+            self.weight_class = "Bantamweight"
         elif self.weight > 112:
-            self.weight_class = " Super Flyweight "
+            self.weight_class = "Super Flyweight"
         elif self.weight > 105:
-            self.weight_class = " Flyweight "
+            self.weight_class = "Flyweight"
         else:
-            self.weight_class = " Too Light "
+            self.weight_class = "Too Light"
 
         return self.weight_class
+
 
     def jab(self, location):
 
@@ -109,7 +110,7 @@ class Boxer:
 
     def upper_cut(self, hand):
 
-        self.technique = "upper_cut"
+        self.technique = "upper cut"
         self.area = "high"
         self.side = hand
 
@@ -120,27 +121,32 @@ class Boxer:
         self.side = hand
 
     def block(self, location):
+
         self.technique = "block"
         self.area = location
         self.side = "null"
 
     def dodge(self, direction):
+
         self.technique = "dodge"
         self.area = "null"
         self.side = direction
 
     def hit(self, other_fighter, multiple, add):
+
         self.hits.append(5 * multiple)
         self.stamina -= (2 + add)
         other_fighter.hp -= 5 * multiple
         other_fighter.stamina -= 5 * multiple
 
     def blocked(self, other_fighter, multiple, add):
+
         self.stamina -= (2 + add)
         other_fighter.blocks.append(5 * multiple)
         other_fighter.stamina -= (2 + add)
 
     def counter(self, other_fighter, multiple):
+
         self.stamina -= 5 * multiple
         other_fighter.stamina -= 5 * multiple
 
@@ -151,15 +157,15 @@ class Boxer:
             if other_fighter.technique == "block":
                 if self.area != other_fighter.area:
                     self.hit(other_fighter, 1, 0)
-                    return self.technique_hit
+                    return self.jab_hit
                 else:
                     self.blocked(other_fighter, 1, 0)
                     return other_fighter.jab_blocked
 
             elif other_fighter.technique == "dodge":
-                if self.side != other_fighter.side:
+                if self.side == other_fighter.side:
                     self.hit(other_fighter, 1, 0)
-                    return self.technique_hit
+                    return self.jab_hit
                 else:
                     self.blocked(other_fighter, 1, 0)
                     return other_fighter.jab_dodged
@@ -169,55 +175,55 @@ class Boxer:
                     if other_fighter.technique == "punch":
                         self.hit(other_fighter, 1, 0)
                         other_fighter.hit(self, 2, 3)
-                        return self.technique_hit + other_fighter.punch_hit
+                        return self.jab_hit + other_fighter.punch_hit
                     elif other_fighter.technique == "hook":
                         self.hit(other_fighter, 1, 0)
                         other_fighter.hit(self, 3, 8)
-                        return self.technique_hit + other_fighter.hook_hit
+                        return self.jab_hit + other_fighter.hook_hit
                     elif other_fighter.technique == "upper cut":
                         self.hit(other_fighter, 1, 0)
                         other_fighter.hit(self, 4, 13)
-                        return self.technique_hit + other_fighter.uppercut_hit
+                        return self.jab_hit + other_fighter.uppercut_hit
                     else:
                         self.hit(other_fighter, 1, 0)
                         other_fighter.hit(self, 1, 0)
-                        return self.technique_hit + other_fighter.technique_hit
+                        return self.jab_hit + other_fighter.jab_hit
                 else:
                     if self.side != other_fighter.side:
                         if other_fighter.technique == "punch":
                             self.hit(other_fighter, 1, 0)
                             other_fighter.hit(self, 2, 3)
-                            return self.technique_hit + other_fighter.punch_hit
+                            return self.jab_hit + other_fighter.punch_hit
                         elif other_fighter.technique == "hook":
                             self.hit(other_fighter, 1, 0)
                             other_fighter.hit(self, 3, 8)
-                            return self.technique_hit + other_fighter.hook_hit
+                            return self.jab_hit + other_fighter.hook_hit
                         elif other_fighter.technique == "upper cut":
                             self.hit(other_fighter, 1, 0)
                             other_fighter.hit(self, 4, 13)
-                            return self.technique_hit + other_fighter.uppercut_hit
+                            return self.jab_hit + other_fighter.uppercut_hit
                         else:
                             self.hit(other_fighter, 1, 0)
                             other_fighter.hit(self, 1, 0)
-                            return self.technique_hit + other_fighter.technique_hit
+                            return self.jab_hit + other_fighter.jab_hit
                     else:
                         self.counter(other_fighter, 1)
-                        return self.technique.capitalize() + "countered"
+                        return self.technique.capitalize() + " Countered"
 
         elif self.technique == "punch":
 
             if other_fighter.technique == "block":
                 if self.area != other_fighter.area:
                     self.hit(other_fighter, 2, 3)
-                    return self.technique_hit
+                    return self.punch_hit
                 else:
                     self.blocked(other_fighter, 1, 0)
                     return other_fighter.punch_blocked
 
             elif other_fighter.technique == "dodge":
-                if self.side != other_fighter.side:
+                if self.side == other_fighter.side:
                     self.hit(other_fighter, 2, 3)
-                    return self.technique_hit
+                    return self.punch_hit
                 else:
                     self.blocked(other_fighter, 1, 0)
                     return other_fighter.punch_dodged
@@ -227,55 +233,55 @@ class Boxer:
                     if other_fighter.technique == "jab":
                         self.hit(other_fighter, 2, 3)
                         other_fighter.hit(self, 1, 0)
-                        return self.technique_hit + other_fighter.jab_hit
+                        return self.punch_hit + other_fighter.jab_hit
                     elif other_fighter.technique == "hook":
                         self.hit(other_fighter, 2, 3)
                         other_fighter.hit(self, 3, 8)
-                        return self.technique_hit + other_fighter.hook_hit
+                        return self.punch_hit + other_fighter.hook_hit
                     elif other_fighter.technique == "upper cut":
                         self.hit(other_fighter, 2, 3)
                         other_fighter.hit(self, 4, 13)
-                        return self.technique_hit + other_fighter.uppercut_hit
+                        return self.punch_hit + other_fighter.uppercut_hit
                     else:
                         self.hit(other_fighter, 2, 3)
                         other_fighter.hit(self, 2, 3)
-                        return self.technique_hit + other_fighter.technique_hit
+                        return self.punch_hit + other_fighter.punch_hit
                 else:
                     if self.side != other_fighter.side:
                         if other_fighter.technique == "jab":
                             self.hit(other_fighter, 2, 3)
                             other_fighter.hit(self, 1, 0)
-                            return self.technique_hit + other_fighter.jab_hit
+                            return self.punch_hit + other_fighter.jab_hit
                         elif other_fighter.technique == "hook":
                             self.hit(other_fighter, 2, 3)
                             other_fighter.hit(self, 3, 8)
-                            return self.technique_hit + other_fighter.hook_hit
+                            return self.punch_hit + other_fighter.hook_hit
                         elif other_fighter.technique == "upper cut":
                             self.hit(other_fighter, 2, 3)
                             other_fighter.hit(self, 4, 13)
-                            return self.technique_hit + other_fighter.uppercut_hit
+                            return self.punch_hit + other_fighter.uppercut_hit
                         else:
                             self.hit(other_fighter, 2, 3)
                             other_fighter.hit(self, 2, 3)
-                            return self.technique_hit + other_fighter.technique_hit
+                            return self.punch_hit + other_fighter.punch_hit
                     else:
                         self.counter(other_fighter, 1)
-                        return self.technique.capitalize() + "countered"
+                        return self.technique.capitalize() + " Countered"
 
         elif self.technique == "hook":
 
             if other_fighter.technique == "block":
                 if self.area != other_fighter.area:
                     self.hit(other_fighter, 3, 8)
-                    return self.technique_hit
+                    return self.hook_hit
                 else:
                     self.blocked(other_fighter, 2, 3)
                     return other_fighter.hook_blocked
 
             elif other_fighter.technique == "dodge":
-                if self.side != other_fighter.side:
+                if self.side == other_fighter.side:
                     self.hit(other_fighter, 3, 8)
-                    return self.technique_hit
+                    return self.hook_hit
                 else:
                     self.blocked(other_fighter, 2, 3)
                     return other_fighter.hook_dodged
@@ -285,55 +291,55 @@ class Boxer:
                     if other_fighter.technique == "punch":
                         self.hit(other_fighter, 3, 8)
                         other_fighter.hit(self, 2, 3)
-                        return self.technique_hit + other_fighter.punch_hit
+                        return self.hook_hit + other_fighter.punch_hit
                     elif other_fighter.technique == "jab":
                         self.hit(other_fighter, 3, 8)
                         other_fighter.hit(self, 1, 0)
-                        return self.technique_hit + other_fighter.jab_hit
+                        return self.hook_hit + other_fighter.jab_hit
                     elif other_fighter.technique == "upper cut":
                         self.hit(other_fighter, 3, 8)
                         other_fighter.hit(self, 4, 13)
-                        return self.technique_hit + other_fighter.uppercut_hit
+                        return self.hook_hit + other_fighter.uppercut_hit
                     else:
                         self.hit(other_fighter, 3, 8)
                         other_fighter.hit(self, 3, 8)
-                        return self.technique_hit + other_fighter.technique_hit
+                        return self.hook_hit + other_fighter.hook_hit
                 else:
                     if self.side != other_fighter.side:
                         if other_fighter.technique == "punch":
                             self.hit(other_fighter, 3, 8)
                             other_fighter.hit(self, 2, 3)
-                            return self.technique_hit + other_fighter.punch_hit
+                            return self.hook_hit + other_fighter.punch_hit
                         elif other_fighter.technique == "jab":
                             self.hit(other_fighter, 3, 8)
                             other_fighter.hit(self, 1, 0)
-                            return self.technique_hit + other_fighter.jab_hit
+                            return self.hook_hit + other_fighter.jab_hit
                         elif other_fighter.technique == "upper cut":
                             self.hit(other_fighter, 3, 8)
                             other_fighter.hit(self, 4, 13)
-                            return self.technique_hit + other_fighter.uppercut_hit
+                            return self.hook_hit + other_fighter.uppercut_hit
                         else:
                             self.hit(other_fighter, 3, 8)
                             other_fighter.hit(self, 3, 8)
-                            return self.technique_hit + other_fighter.technique_hit
+                            return self.hook_hit + other_fighter.hook_hit
                     else:
                         self.counter(other_fighter, 2)
-                        return self.technique.capitalize() + "countered"
+                        return self.technique.capitalize() + " Countered"
 
-        elif self.technique == "upper_cut":
+        elif self.technique == "upper cut":
 
             if other_fighter.technique == "block":
                 if self.area != other_fighter.area:
                     self.hit(other_fighter, 4, 13)
-                    return self.technique_hit
+                    return self.uppercut_hit
                 else:
                     self.blocked(other_fighter, 2, 3)
                     return other_fighter.uppercut_blocked
 
             elif other_fighter.technique == "dodge":
-                if self.side != other_fighter.side:
+                if self.side == other_fighter.side:
                     self.hit(other_fighter, 4, 13)
-                    return self.technique_hit
+                    return self.uppercut_hit
                 else:
                     self.blocked(other_fighter, 2, 3)
                     return other_fighter.uppercut_dodged
@@ -343,40 +349,40 @@ class Boxer:
                     if other_fighter.technique == "punch":
                         self.hit(other_fighter, 4, 13)
                         other_fighter.hit(self, 2, 3)
-                        return self.technique_hit + other_fighter.punch_hit
+                        return self.uppercut_hit + other_fighter.punch_hit
                     elif other_fighter.technique == "hook":
                         self.hit(other_fighter, 4, 13)
                         other_fighter.hit(self, 3, 13)
-                        return self.technique_hit + other_fighter.hook_hit
+                        return self.uppercut_hit + other_fighter.hook_hit
                     elif other_fighter.technique == "jab":
                         self.hit(other_fighter, 4, 13)
                         other_fighter.hit(self, 1, 0)
-                        return self.technique_hit + other_fighter.jab_hit
+                        return self.uppercut_hit + other_fighter.jab_hit
                     else:
                         self.hit(other_fighter, 4, 13)
                         other_fighter.hit(self, 4, 13)
-                        return self.technique_hit + other_fighter.technique_hit
+                        return self.uppercut_hit + other_fighter.uppercut_hit
                 else:
                     if self.side != other_fighter.side:
                         if other_fighter.technique == "punch":
                             self.hit(other_fighter, 4, 13)
                             other_fighter.hit(self, 2, 3)
-                            return self.technique_hit + other_fighter.punch_hit
+                            return self.uppercut_hit + other_fighter.punch_hit
                         elif other_fighter.technique == "hook":
                             self.hit(other_fighter, 4, 13)
                             other_fighter.hit(self, 3, 8)
-                            return self.technique_hit + other_fighter.hook_hit
+                            return self.uppercut_hit + other_fighter.hook_hit
                         elif other_fighter.technique == "jab":
                             self.hit(other_fighter, 4, 13)
                             other_fighter.hit(self, 1, 0)
-                            return self.technique_hit + other_fighter.jab_hit
+                            return self.uppercut_hit + other_fighter.jab_hit
                         else:
                             self.hit(other_fighter, 4, 13)
                             other_fighter.hit(self, 4, 13)
-                            return self.technique_hit + other_fighter.technique_hit
+                            return self.uppercut_hit + other_fighter.uppercut_hit
                     else:
                         self.counter(other_fighter, 2)
-                        return self.technique.capitalize() + "countered"
+                        return self.technique.capitalize() + " Countered"
 
         elif self.technique == "block":
 
@@ -397,7 +403,7 @@ class Boxer:
                     return other_fighter.punch_hit
                 elif other_fighter.technique == "hook":
                     other_fighter.hit(self, 3, 8)
-                    return self.technique_hit + other_fighter.jab_hit
+                    return other_fighter.jab_hit
                 elif other_fighter.technique == "upper cut":
                     other_fighter.hit(self, 4, 13)
                     return other_fighter.uppercut_hit
@@ -428,7 +434,7 @@ class Boxer:
                 
                 return "Double Dodge"
 
-            elif self.area != other_fighter.area:
+            elif self.side == other_fighter.side:
                 if other_fighter.technique == "jab":
                     other_fighter.hit(self, 1, 0)
                     return other_fighter.jab_hit
@@ -437,7 +443,7 @@ class Boxer:
                     return other_fighter.punch_hit
                 elif other_fighter.technique == "hook":
                     other_fighter.hit(self, 3, 8)
-                    return self.technique_hit + other_fighter.jab_hit
+                    return other_fighter.jab_hit
                 elif other_fighter.technique == "upper cut":
                     other_fighter.hit(self, 4, 13)
                     return other_fighter.uppercut_hit
@@ -463,19 +469,29 @@ class Boxer:
             return "Miss"
 
     def rest(self, rounds):
+
         if rounds.round == 2:
             if self.hp < 0.75 * (100 + (self.level * 10 + self.wins * 5 - self.losses * 2)):
                 self.hp = 0.75 * (100 + (self.level * 10 + self.wins * 5 - self.losses * 2))
+                self.stamina = 100 + (self.level * 10 + self.wins * 5 - self.losses * 2)
             else:
                 self.hp = 100 + (self.level * 10 + self.wins * 5 - self.losses * 2)
+                self.stamina = 100 + (self.level * 10 + self.wins * 5 - self.losses * 2)
         elif rounds.round >= 3:
             if self.hp < 0.5 * (100 + (self.level * 10 + self.wins * 5 - self.losses * 2)):
                 self.hp = 0.5 * (100 + (self.level * 10 + self.wins * 5 - self.losses * 2))
+                self.stamina = 100 + (self.level * 10 + self.wins * 5 - self.losses * 2)
             elif self.hp < 0.75 * (100 + (self.level * 10 + self.wins * 5 - self.losses * 2)):
                 self.hp = 0.75 * (100 + (self.level * 10 + self.wins * 5 - self.losses * 2))
+                self.stamina = 100 + (self.level * 10 + self.wins * 5 - self.losses * 2)
 
-    def dazed(self):
-        return "Dazed"
+    def dazed(self, other_fighter):
+        if self.stamina <= 0:
+            self.hp -10
+            return self.name + " is Dazed"
+        elif other_fighter.stamina <= 0:
+            other_fighter.hp -10
+            return other_fighter.name + " is Dazed"
 
     def down(self):
         count = 10
@@ -490,20 +506,27 @@ class Boxer:
         self.hp -= 10
         return count
 
-    def tko(self):
-        self.concious = False
-        return self.name + " is KO'd"
+    def tko(self, other_fighter):
+        
+        if self.hp <= 0:
+            self.concious = False
+            return self.name + " is KO'd"
+        elif other_fighter.hp <= 0:
+            other_fighter.concious = False
+            return other_fighter.name + " is KO'd"
 
     def match_end(self, other_fighter):
+
+        for hit in self.hits:
+            self.score += hit
+        for block in self.blocks:
+            self.score += block
+        for h in other_fighter.hits:
+            other_fighter.score += h
+        for b in other_fighter.blocks:
+            other_fighter.score += b
+ 
         if self.concious and other_fighter.concious:
-            for hit in self.hits:
-                self.score += hit
-            for block in self.blocks:
-                self.score += block
-            for h in other_fighter.hits:
-                other_fighter.score += h
-            for b in other_fighter.blocks:
-                other_fighter.score += b
             if self.score > other_fighter.score:
                 self.wins += 1
                 self.level += 1
@@ -513,9 +536,13 @@ class Boxer:
                 other_fighter.wins += 1
                 other_fighter.level += 1
                 self.losses += 1
-                return other_fighter.name + "WINS!"
+                return other_fighter.name + " WINS!"
             else:
                 return "Draw"
+        elif not self.concious:
+            return other_fighter.name + " WINS by TKO!"
+        elif not other_fighter.concious:
+            return self.name + " WINS by TKO!"
 
 class Rounds:
 
@@ -532,16 +559,333 @@ class Rounds:
     def cool_down(self):
         return self.timer(30)
 
-    def timer(start, boxer_1, boxer_2):
+    def timer(self, start):
         while start:
             mins, secs = divmod(start, 60)
             timer = "{:02d}:{:02d}".format(mins, secs)
             print(timer, end = "\r")
             time.sleep(1)
             start -= 1
-            if boxer_1.concious == False or boxer_2.concious == False:
-                break
 
 boxer_1 = Boxer("Bob", 177, "6' 1\"", 28)
-
 boxer_2 = Boxer("Ted", 182, "5' 10\"", 36, False)
+
+boxer_1.weight_categories()
+boxer_2.weight_categories()
+
+print(boxer_1)
+print(boxer_2)
+
+health1 = boxer_1.hp
+print(health1)
+health2 = boxer_2.hp
+print(health2)
+stam1 = boxer_1.stamina
+print(stam1)
+stam2 = boxer_2.stamina
+print(stam2)
+
+boxer_1.jab("middle")
+boxer_2.jab("high")
+
+check = boxer_1.hit_or_blocked(boxer_2)
+print(check)
+print(boxer_1.technique)
+print(boxer_2.technique)
+print(boxer_1.side)
+print(boxer_2.side)
+print(boxer_1.area)
+print(boxer_2.area)
+health1 = boxer_1.hp
+print(health1)
+health2 = boxer_2.hp
+print(health2)
+stam1 = boxer_1.stamina
+print(stam1)
+stam2 = boxer_2.stamina
+print(stam2)
+
+boxer_1.jab("low")
+boxer_2.hook("high", "right")
+
+check = boxer_1.hit_or_blocked(boxer_2)
+print(check)
+print(boxer_1.technique)
+print(boxer_2.technique)
+print(boxer_1.side)
+print(boxer_2.side)
+print(boxer_1.area)
+print(boxer_2.area)
+health1 = boxer_1.hp
+print(health1)
+health2 = boxer_2.hp
+print(health2)
+stam1 = boxer_1.stamina
+print(stam1)
+stam2 = boxer_2.stamina
+print(stam2)
+
+boxer_1.upper_cut("right")
+boxer_2.dodge("right")
+
+check = boxer_1.hit_or_blocked(boxer_2)
+print(check)
+print(boxer_1.technique)
+print(boxer_2.technique)
+print(boxer_1.side)
+print(boxer_2.side)
+print(boxer_1.area)
+print(boxer_2.area)
+health1 = boxer_1.hp
+print(health1)
+health2 = boxer_2.hp
+print(health2)
+stam1 = boxer_1.stamina
+print(stam1)
+stam2 = boxer_2.stamina
+print(stam2)
+
+boxer_1.dodge("right")
+boxer_2.upper_cut("right")
+
+check = boxer_1.hit_or_blocked(boxer_2)
+print(check)
+print(boxer_1.technique)
+print(boxer_2.technique)
+print(boxer_1.side)
+print(boxer_2.side)
+print(boxer_1.area)
+print(boxer_2.area)
+health1 = boxer_1.hp
+print(health1)
+health2 = boxer_2.hp
+print(health2)
+stam1 = boxer_1.stamina
+print(stam1)
+stam2 = boxer_2.stamina
+print(stam2)
+
+boxer_1.punch("middle")
+boxer_2.block("middle")
+
+check = boxer_1.hit_or_blocked(boxer_2)
+print(check)
+print(boxer_1.technique)
+print(boxer_2.technique)
+print(boxer_1.side)
+print(boxer_2.side)
+print(boxer_1.area)
+print(boxer_2.area)
+health1 = boxer_1.hp
+print(health1)
+health2 = boxer_2.hp
+print(health2)
+stam1 = boxer_1.stamina
+print(stam1)
+stam2 = boxer_2.stamina
+print(stam2)
+
+
+boxer_1.punch("high")
+boxer_2.block("middle")
+
+check = boxer_1.hit_or_blocked(boxer_2)
+print(check)
+print(boxer_1.technique)
+print(boxer_2.technique)
+print(boxer_1.side)
+print(boxer_2.side)
+print(boxer_1.area)
+print(boxer_2.area)
+health1 = boxer_1.hp
+print(health1)
+health2 = boxer_2.hp
+print(health2)
+stam1 = boxer_1.stamina
+print(stam1)
+stam2 = boxer_2.stamina
+print(stam2)
+
+
+boxer_1.hook("high", "right")
+boxer_2.hook("high", "left")
+
+check = boxer_1.hit_or_blocked(boxer_2)
+print(check)
+print(boxer_1.technique)
+print(boxer_2.technique)
+print(boxer_1.side)
+print(boxer_2.side)
+print(boxer_1.area)
+print(boxer_2.area)
+health1 = boxer_1.hp
+print(health1)
+health2 = boxer_2.hp
+print(health2)
+stam1 = boxer_1.stamina
+print(stam1)
+stam2 = boxer_2.stamina
+print(stam2)
+
+
+boxer_1.hook("low", "left")
+boxer_2.hook("low", "left")
+
+check = boxer_1.hit_or_blocked(boxer_2)
+print(check)
+print(boxer_1.technique)
+print(boxer_2.technique)
+print(boxer_1.side)
+print(boxer_2.side)
+print(boxer_1.area)
+print(boxer_2.area)
+health1 = boxer_1.hp
+print(health1)
+health2 = boxer_2.hp
+print(health2)
+stam1 = boxer_1.stamina
+print(stam1)
+stam2 = boxer_2.stamina
+print(stam2)
+
+
+boxer_1.block("low")
+boxer_2.block("mid")
+
+check = boxer_1.hit_or_blocked(boxer_2)
+print(check)
+print(boxer_1.technique)
+print(boxer_2.technique)
+print(boxer_1.side)
+print(boxer_2.side)
+print(boxer_1.area)
+print(boxer_2.area)
+health1 = boxer_1.hp
+print(health1)
+health2 = boxer_2.hp
+print(health2)
+stam1 = boxer_1.stamina
+print(stam1)
+stam2 = boxer_2.stamina
+print(stam2)
+
+
+boxer_1.block("low")
+boxer_2.dodge("right")
+
+check = boxer_1.hit_or_blocked(boxer_2)
+print(check)
+print(boxer_1.technique)
+print(boxer_2.technique)
+print(boxer_1.side)
+print(boxer_2.side)
+print(boxer_1.area)
+print(boxer_2.area)
+health1 = boxer_1.hp
+print(health1)
+health2 = boxer_2.hp
+print(health2)
+stam1 = boxer_1.stamina
+print(stam1)
+stam2 = boxer_2.stamina
+print(stam2)
+
+
+boxer_1.dodge("left")
+boxer_2.dodge("right")
+
+
+check = boxer_1.hit_or_blocked(boxer_2)
+print(check)
+print(boxer_1.technique)
+print(boxer_2.technique)
+print(boxer_1.side)
+print(boxer_2.side)
+print(boxer_1.area)
+print(boxer_2.area)
+health1 = boxer_1.hp
+print(health1)
+health2 = boxer_2.hp
+print(health2)
+stam1 = boxer_1.stamina
+print(stam1)
+stam2 = boxer_2.stamina
+print(stam2)
+
+print(boxer_1.hits)
+print(boxer_1.blocks)
+print(boxer_2.hits)
+print(boxer_2.blocks)
+
+final = boxer_1.match_end(boxer_2)
+print(final)
+
+match_1 = Rounds()
+print(match_1)
+
+match_1.round_change()
+print(match_1)
+
+match_1.cool_down()
+boxer_1.rest(match_1)
+boxer_2.rest(match_1)
+
+health1 = boxer_1.hp
+print(health1)
+health2 = boxer_2.hp
+print(health2)
+stam1 = boxer_1.stamina
+print(stam1)
+stam2 = boxer_2.stamina
+print(stam2)
+
+boxer_1.hook("high", "right")
+boxer_2.jab("high")
+boxer_1.hit_or_blocked(boxer_2)
+
+boxer_1.upper_cut("right")
+boxer_2.dodge("right")
+boxer_1.hit_or_blocked(boxer_2)
+
+boxer_1.jab("high")
+boxer_2.jab("low")
+boxer_1.hit_or_blocked(boxer_2)
+
+boxer_1.block("high")
+boxer_2.punch("high")
+boxer_1.hit_or_blocked(boxer_2)
+
+boxer_1.upper_cut("right")
+boxer_2.dodge("right")
+boxer_1.hit_or_blocked(boxer_2)
+
+boxer_1.hook("middle", "left")
+boxer_2.jab("high")
+boxer_1.hit_or_blocked(boxer_2)
+
+boxer_1.hook("low", "right")
+boxer_2.punch("high")
+boxer_1.hit_or_blocked(boxer_2)
+
+boxer_1.block("middle")
+boxer_2.punch("middle")
+boxer_1.hit_or_blocked(boxer_2)
+
+boxer_1.upper_cut("right")
+boxer_2.dodge("right")
+boxer_1.hit_or_blocked(boxer_2)
+
+health1 = boxer_1.hp
+print(health1)
+health2 = boxer_2.hp
+print(health2)
+stam1 = boxer_1.stamina
+print(stam1)
+stam2 = boxer_2.stamina
+print(stam2)
+
+knockout = boxer_1.tko(boxer_2)
+print(knockout)
+
+final2 = boxer_1.match_end(boxer_2)
+print(final2)
