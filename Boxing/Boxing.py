@@ -4,6 +4,7 @@ class Boxer:
 
     def __init__(self, new_name, new_weight, new_height, new_age, new_right_handed = True):
         
+        # Name and stats
         self.name = new_name
         self.weight = new_weight
         self.height = new_height
@@ -12,16 +13,20 @@ class Boxer:
         self.wins = 0
         self.losses = 0
         self.level = 1
+        self.right_handed = new_right_handed
+        # Health Stats
         self.hp = 100 + (self.level * 10 + self.wins * 5 - self.losses * 2)
         self.stamina = 100 + (self.level * 10 + self.wins * 5 - self.losses * 2)
         self.concious = True
-        self.right_handed = new_right_handed
+        # Tracking contacts
         self.hits = []
         self.blocks = []
         self.score = 0
+        # Location and attack type variables
         self.area = ""
         self.side = ""
         self.technique = ""
+        # Contact type and points. Output
         self.jab_hit = self.name + " Jab Hit +5 "
         self.jab_blocked = self.name + " Jab Blocked +5 "
         self.jab_dodged = self.name + " Jab Dodged +5 "
@@ -37,6 +42,7 @@ class Boxer:
 
     def __repr__(self):
         
+        # Displays boxer stats
         return """
         Name: {}
         Class: {}
@@ -51,7 +57,8 @@ class Boxer:
             )
 
     def weight_categories(self):
-
+        
+        # Determines weight classes
         if self.weight > 200:
             self.weight_class = "Heavyweight"
         elif self.weight > 175:
@@ -87,7 +94,7 @@ class Boxer:
 
         return self.weight_class
 
-
+    # Contact functions
     def jab(self, location):
 
         self.technique = "jab"
@@ -131,7 +138,8 @@ class Boxer:
         self.technique = "dodge"
         self.area = "null"
         self.side = direction
-
+    
+    # Calculates points and updates appropriate lists
     def hit(self, other_fighter, multiple, add):
 
         self.hits.append(5 * multiple)
@@ -149,7 +157,9 @@ class Boxer:
 
         self.stamina -= 5 * multiple
         other_fighter.stamina -= 5 * multiple
-
+    
+    # Determines player interactions based on contact functions. 
+    # Calls appropriate functions. 
     def hit_or_blocked(self, other_fighter):
 
         if self.technique == "jab":
@@ -467,7 +477,8 @@ class Boxer:
         else:
 
             return "Miss"
-
+    
+    # Rejuvenates player health stats based on round.
     def rest(self, rounds):
 
         if rounds.round == 2:
@@ -485,6 +496,7 @@ class Boxer:
                 self.hp = 0.75 * (100 + (self.level * 10 + self.wins * 5 - self.losses * 2))
                 self.stamina = 100 + (self.level * 10 + self.wins * 5 - self.losses * 2)
 
+    # Increases health loss when stamina is low.
     def dazed(self, other_fighter):
         if self.stamina <= 0:
             self.hp -10
@@ -493,6 +505,8 @@ class Boxer:
             other_fighter.hp -10
             return other_fighter.name + " is Dazed"
 
+    # If knocked down. Determines how long the player stays down.
+    # Calculated based on health ans level. Penalizes player by decreasing health.
     def down(self):
         count = 10
         if self.hp > 0.2 * (100 + (self.level * 10 + self.wins * 5 - self.losses * 2)):
@@ -506,6 +520,7 @@ class Boxer:
         self.hp -= 10
         return count
 
+    # In the event health reaches zero. Prompts unconscious and to end fight
     def tko(self, other_fighter):
         
         if self.hp <= 0:
@@ -515,6 +530,7 @@ class Boxer:
             other_fighter.concious = False
             return other_fighter.name + " is KO'd"
 
+    # Determines winner, win type and score
     def match_end(self, other_fighter):
 
         for hit in self.hits:
@@ -546,19 +562,14 @@ class Boxer:
 
 class Rounds:
 
+    # Default round to 1
     def __init__(self):
         self.round = 1
-
+    # Outputs current round
     def __repr__(self):
         return "ROUND: " + str(self.round)
 
-    def round_change(self):
-        self.round += 1
-        return self.timer(180)
-            
-    def cool_down(self):
-        return self.timer(30)
-
+    # Function for second countdown timer
     def timer(self, start):
         while start:
             mins, secs = divmod(start, 60)
@@ -567,15 +578,28 @@ class Rounds:
             time.sleep(1)
             start -= 1
 
+    # 3 minute round timer. Updates round number upon completion
+    def round_change(self):
+        self.round += 1
+        return self.timer(180)
+    
+    # 30 second rest timer
+    def cool_down(self):
+        return self.timer(30)
+
+# Boxer objects
 boxer_1 = Boxer("Bob", 177, "6' 1\"", 28)
 boxer_2 = Boxer("Ted", 182, "5' 10\"", 36, False)
 
+# Place in appropriate wieght classes.
 boxer_1.weight_categories()
 boxer_2.weight_categories()
 
+# Display boxer information
 print(boxer_1)
 print(boxer_2)
 
+# Display Default health stats
 health1 = boxer_1.hp
 print(health1)
 health2 = boxer_2.hp
@@ -585,9 +609,11 @@ print(stam1)
 stam2 = boxer_2.stamina
 print(stam2)
 
+# Test attacks
 boxer_1.jab("middle")
 boxer_2.jab("high")
 
+# Set and diplay updated stats
 check = boxer_1.hit_or_blocked(boxer_2)
 print(check)
 print(boxer_1.technique)
@@ -605,9 +631,11 @@ print(stam1)
 stam2 = boxer_2.stamina
 print(stam2)
 
+# Test attacks
 boxer_1.jab("low")
 boxer_2.hook("high", "right")
 
+# Set and diplay updated stats
 check = boxer_1.hit_or_blocked(boxer_2)
 print(check)
 print(boxer_1.technique)
@@ -625,9 +653,11 @@ print(stam1)
 stam2 = boxer_2.stamina
 print(stam2)
 
+# Test attacks
 boxer_1.upper_cut("right")
 boxer_2.dodge("right")
 
+# Set and diplay updated stats
 check = boxer_1.hit_or_blocked(boxer_2)
 print(check)
 print(boxer_1.technique)
@@ -645,9 +675,11 @@ print(stam1)
 stam2 = boxer_2.stamina
 print(stam2)
 
+# Test attacks
 boxer_1.dodge("right")
 boxer_2.upper_cut("right")
 
+# Set and diplay updated stats
 check = boxer_1.hit_or_blocked(boxer_2)
 print(check)
 print(boxer_1.technique)
@@ -665,9 +697,11 @@ print(stam1)
 stam2 = boxer_2.stamina
 print(stam2)
 
+# Test attacks
 boxer_1.punch("middle")
 boxer_2.block("middle")
 
+# Set and diplay updated stats
 check = boxer_1.hit_or_blocked(boxer_2)
 print(check)
 print(boxer_1.technique)
@@ -685,10 +719,11 @@ print(stam1)
 stam2 = boxer_2.stamina
 print(stam2)
 
-
+# Test attacks
 boxer_1.punch("high")
 boxer_2.block("middle")
 
+# Set and diplay updated stats
 check = boxer_1.hit_or_blocked(boxer_2)
 print(check)
 print(boxer_1.technique)
@@ -706,10 +741,11 @@ print(stam1)
 stam2 = boxer_2.stamina
 print(stam2)
 
-
+# Test attacks
 boxer_1.hook("high", "right")
 boxer_2.hook("high", "left")
 
+# Set and diplay updated stats
 check = boxer_1.hit_or_blocked(boxer_2)
 print(check)
 print(boxer_1.technique)
@@ -727,10 +763,11 @@ print(stam1)
 stam2 = boxer_2.stamina
 print(stam2)
 
-
+# Test attacks
 boxer_1.hook("low", "left")
 boxer_2.hook("low", "left")
 
+# Set and diplay updated stats
 check = boxer_1.hit_or_blocked(boxer_2)
 print(check)
 print(boxer_1.technique)
@@ -748,10 +785,11 @@ print(stam1)
 stam2 = boxer_2.stamina
 print(stam2)
 
-
+# Test attacks
 boxer_1.block("low")
 boxer_2.block("mid")
 
+# Set and diplay updated stats
 check = boxer_1.hit_or_blocked(boxer_2)
 print(check)
 print(boxer_1.technique)
@@ -769,10 +807,11 @@ print(stam1)
 stam2 = boxer_2.stamina
 print(stam2)
 
-
+# Test attacks
 boxer_1.block("low")
 boxer_2.dodge("right")
 
+# Set and diplay updated stats
 check = boxer_1.hit_or_blocked(boxer_2)
 print(check)
 print(boxer_1.technique)
@@ -790,11 +829,11 @@ print(stam1)
 stam2 = boxer_2.stamina
 print(stam2)
 
-
+# Test attacks
 boxer_1.dodge("left")
 boxer_2.dodge("right")
 
-
+# Set and diplay updated stats
 check = boxer_1.hit_or_blocked(boxer_2)
 print(check)
 print(boxer_1.technique)
@@ -812,24 +851,32 @@ print(stam1)
 stam2 = boxer_2.stamina
 print(stam2)
 
+# Verify round stats
 print(boxer_1.hits)
 print(boxer_1.blocks)
 print(boxer_2.hits)
 print(boxer_2.blocks)
 
+# Determine winner
 final = boxer_1.match_end(boxer_2)
 print(final)
 
+# Test round timer
 match_1 = Rounds()
 print(match_1)
 
+# Test round change
 match_1.round_change()
 print(match_1)
 
+# Test cooldown
 match_1.cool_down()
+
+# Test rest health recoup 
 boxer_1.rest(match_1)
 boxer_2.rest(match_1)
 
+# View pre round health stats
 health1 = boxer_1.hp
 print(health1)
 health2 = boxer_2.hp
@@ -839,6 +886,7 @@ print(stam1)
 stam2 = boxer_2.stamina
 print(stam2)
 
+# Test attacks. Verify 
 boxer_1.hook("high", "right")
 boxer_2.jab("high")
 boxer_1.hit_or_blocked(boxer_2)
@@ -875,6 +923,7 @@ boxer_1.upper_cut("right")
 boxer_2.dodge("right")
 boxer_1.hit_or_blocked(boxer_2)
 
+# Test post round health stats
 health1 = boxer_1.hp
 print(health1)
 health2 = boxer_2.hp
@@ -884,8 +933,10 @@ print(stam1)
 stam2 = boxer_2.stamina
 print(stam2)
 
+# Test knockout feature
 knockout = boxer_1.tko(boxer_2)
 print(knockout)
 
+# Test win by knockout
 final2 = boxer_1.match_end(boxer_2)
 print(final2)
